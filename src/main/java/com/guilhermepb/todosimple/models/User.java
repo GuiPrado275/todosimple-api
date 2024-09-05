@@ -11,30 +11,30 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = User.TABLE_NAME)
+@Table(name = User.TABLE_NAME) //table for database
 public class User {
     public interface CreateUser{}
-    public interface UpdateUser{}
+    public interface UpdateUser{} //update user is only for password
 
     public static final String TABLE_NAME = "user";
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //id is random
     @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "username", length = 100, nullable = false, unique = true)
-    @NotNull(groups = CreateUser.class)
+    @Column(name = "username", length = 100, nullable = false, unique = true) // limits for the username
+    @NotNull(groups = CreateUser.class) //the username only can be created and he cant be null or empyt
     @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 2, max = 100)
+    @Size(groups = CreateUser.class, min = 2, max = 100) //limits of length
     private String username;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "password", length = 60, nullable = false)
-    @NotNull(groups = {CreateUser.class, UpdateUser.class})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //write_only: front side don't have access of password
+    @Column(name = "password", length = 60, nullable = false) //limits
+    @NotNull(groups = {CreateUser.class, UpdateUser.class}) // password can be created and updated
     @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
-    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
+    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60) //limits of length
     private String password;
 
     //private List<Task> tasks = new ArrayList<Task>();
@@ -42,12 +42,14 @@ public class User {
     public User(){
     }
 
-    public User(Long id, String username, String password) {
+    public User(Long id, String username, String password) { //constructor
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
+
+    //getters and setters
     public Long getId() {
         return this.id;
     }
@@ -73,7 +75,7 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object) { //this 'equals' is to ensure: this.(id, username and password) == other.(id, username and password)
         if (object == this){
             return true;
         }
@@ -96,7 +98,7 @@ public class User {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() { //storage and recuperation of objects, each object had a hashcode
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
