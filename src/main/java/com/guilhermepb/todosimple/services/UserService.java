@@ -1,7 +1,6 @@
 package com.guilhermepb.todosimple.services;
 
 import com.guilhermepb.todosimple.models.User;
-import com.guilhermepb.todosimple.repositories.TaskRepository;
 import com.guilhermepb.todosimple.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,6 @@ public class UserService {
     @Autowired                              //@Autowired: "Constructor" for when we want to instantiate an object, but
     private UserRepository userRepository;  //the interface can't to instantiate object, we use the notes of springboot
                                             //for to instantiate the objects
-    @Autowired
-    private TaskRepository taskRepository;
 
     public User findById(Long id){
         Optional<User> user = this.userRepository.findById(id); // if the user exists show it, else return:
@@ -28,7 +25,6 @@ public class UserService {
     public User crate (User obj){ //@Transactional creates a connection with database and save some data in memory
         obj.setId(null); // to ensure that a bad user can't use the id in username creation
         obj = this.userRepository.save(obj); //saves new object
-        this.taskRepository.saveAll(obj.getTasks()); //saves all tasks of user before he created account
         return obj;
     }
 

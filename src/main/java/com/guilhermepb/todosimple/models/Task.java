@@ -20,7 +20,7 @@ public class Task {
     public static final String TABLE_NAME = "task";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //id is random (User id)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //id is random (id)
     @Column(name = "id", unique = true)
     private Long id;
 
