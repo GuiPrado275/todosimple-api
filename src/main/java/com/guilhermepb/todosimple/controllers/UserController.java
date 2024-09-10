@@ -41,15 +41,14 @@ public class UserController {
     @Validated(UpdateUser.class)
     public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id){
         obj.setId(id);
-        this.userService.update(obj);
+        this.userService.update(obj);  //for update user
         return ResponseEntity.noContent().build(); //noContend() because we are not returning any data, only updating
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         this.userService.delete(id);                                //for delete user
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); //noContend() because we are not returning any data, only deleting
     }
-
 
 }

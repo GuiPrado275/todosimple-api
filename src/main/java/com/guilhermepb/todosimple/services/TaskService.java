@@ -4,9 +4,11 @@ import com.guilhermepb.todosimple.models.Task;
 import com.guilhermepb.todosimple.models.User;
 import com.guilhermepb.todosimple.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +24,11 @@ public class TaskService {
         Optional<Task> task = taskRepository.findById(id); // if the task exists show it, else return:
         return task.orElseThrow(() -> new RuntimeException("Task not found! Id: " + id +
                 ", Type: " + Task.class.getName())); //the out if user is not found
+    }
+
+    public List<Task> findAllByUserId(Long userId){      //search all tasks of one user
+        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     @Transactional //util for inputs in databases, in create or modification of database
