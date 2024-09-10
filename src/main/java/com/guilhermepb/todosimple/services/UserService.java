@@ -22,7 +22,7 @@ public class UserService {
     }
 
     @Transactional  //util for inputs in databases, in create or modification of database
-    public User crate (User obj){ //@Transactional creates a connection with database and save some data in memory
+    public User create (User obj){ //@Transactional creates a connection with database and save some data in memory
         obj.setId(null); // to ensure that a bad user can't use the id in username creation
         obj = this.userRepository.save(obj); //saves new object
         return obj;
