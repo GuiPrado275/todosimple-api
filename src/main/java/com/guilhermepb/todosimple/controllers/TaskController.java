@@ -2,6 +2,7 @@ package com.guilhermepb.todosimple.controllers;
 
 import com.guilhermepb.todosimple.models.Task;
 import com.guilhermepb.todosimple.services.TaskService;
+import com.guilhermepb.todosimple.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +20,9 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) { //task type response entity
@@ -38,6 +42,7 @@ public class TaskController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){ //search all tasks by userId
+        userService.findById(userId);                                //create an error if the user doesn't exist
         List<Task> objs = this.taskService.findAllByUserId(userId);     //tasks list to be returned
         return ResponseEntity.ok().body(objs);
     }
@@ -53,7 +58,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         this.taskService.delete(id);                    //for delete task
-        return ResponseEntity.noContent().build();  //noContend() because we are not returning any data, only deleting
+        return ResponseEntity.noContent().build(); //noContend() because we are not returning any data, only deleting
     }
 
 }
