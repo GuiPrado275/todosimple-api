@@ -6,7 +6,7 @@ function hideLoader(){
 
 function show(tasks){
 
-    let tab = `<thead>
+    let tab = `<thead>           //table name
             <th scope="col">#</th>
             <th scope="col">Description</th>
             <th scope="col">Username</th>
@@ -15,7 +15,7 @@ function show(tasks){
 
     for (let task of tasks){
         tab += `
-            <tr>
+            <tr>                                    //contents of table
                 <td scope="row">${task.id}</td>
                 <td>${task.description}</td> 
                 <td>${task.user.username}</td>  
@@ -31,7 +31,7 @@ function show(tasks){
 async function getAPI(url){
     const response = await fetch(url, { method: "GET"})
 
-    var data = await response.json();
+    var data = await response.json();     //remove the "loading" and place the table with the tasks and the user
     console.log(data);
     if (response) hideLoader();
     show(data);
