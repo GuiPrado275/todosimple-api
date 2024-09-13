@@ -1,7 +1,6 @@
 package com.guilhermepb.todosimple.exceptions;
 
 import javax.validation.ConstraintViolationException;
-import javax.xml.bind.DataBindingException;
 
 import com.guilhermepb.todosimple.services.exceptions.DataBindingViolationException;
 import com.guilhermepb.todosimple.services.exceptions.ObjectNotFoundException;
@@ -108,8 +107,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request);
     }
 
-
-
     private ResponseEntity<Object> buildErrorResponse(
             Exception exception,
             HttpStatus httpStatus,
@@ -128,9 +125,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         return ResponseEntity.status(httpStatus).body(errorResponse);
     }
-
-
-
-
 
 }
