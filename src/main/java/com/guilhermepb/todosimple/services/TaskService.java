@@ -3,8 +3,9 @@ package com.guilhermepb.todosimple.services;
 import com.guilhermepb.todosimple.models.Task;
 import com.guilhermepb.todosimple.models.User;
 import com.guilhermepb.todosimple.repositories.TaskRepository;
+import com.guilhermepb.todosimple.services.exceptions.DataBindingViolationException;
+import com.guilhermepb.todosimple.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,7 @@ public class TaskService {
 
     public Task findById(Long id){
         Optional<Task> task = taskRepository.findById(id); // if the task exists show it, else return:
-        return task.orElseThrow(() -> new RuntimeException("Task not found! Id: " + id +
+        return task.orElseThrow(() -> new ObjectNotFoundException("Task not found! Id: " + id +
                 ", Type: " + Task.class.getName())); //the out if user is not found
     }
 
@@ -53,7 +54,7 @@ public class TaskService {
             taskRepository.deleteById(id); //delete task
         }
         catch (Exception e){
-            throw new RuntimeException("Task not found! Id: " + id);
+            throw new DataBindingViolationException("Task not found! Id: " + id);
         } //if task has a user, the script will not be deleted
     }
 

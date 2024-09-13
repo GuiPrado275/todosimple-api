@@ -2,6 +2,8 @@ package com.guilhermepb.todosimple.services;
 
 import com.guilhermepb.todosimple.models.User;
 import com.guilhermepb.todosimple.repositories.UserRepository;
+import com.guilhermepb.todosimple.services.exceptions.DataBindingViolationException;
+import com.guilhermepb.todosimple.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,7 @@ public class UserService {
 
     public User findById(Long id){
         Optional<User> user = this.userRepository.findById(id); // if the user exists show it, else return:
-        return user.orElseThrow(() -> new RuntimeException("User not found! Id: " + id +
+        return user.orElseThrow(() -> new ObjectNotFoundException("User not found! Id: " + id +
                 ", Type: " + User.class.getName())); //the out if user is not found
     }
 
@@ -40,7 +42,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id); //delete user
         } catch (Exception e) {
-            throw new RuntimeException("Cannot delete because this user has an entities relationship!");
+            throw new DataBindingViolationException("Cannot delete because this user has an entities relationship!");
         } //if user has a tasks, the script will not be deleted
     }
 

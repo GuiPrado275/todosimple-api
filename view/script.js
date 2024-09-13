@@ -6,7 +6,7 @@ function hideLoader(){
 
 function show(tasks){
 
-    let tab = `<thead>           //table name
+    let tab = `<thead>          
             <th scope="col">#</th>
             <th scope="col">Description</th>
             <th scope="col">Username</th>
@@ -15,7 +15,7 @@ function show(tasks){
 
     for (let task of tasks){
         tab += `
-            <tr>                                    //contents of table
+            <tr>                                   
                 <td scope="row">${task.id}</td>
                 <td>${task.description}</td> 
                 <td>${task.user.username}</td>  
