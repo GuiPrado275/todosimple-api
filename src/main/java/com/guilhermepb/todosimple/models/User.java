@@ -1,14 +1,19 @@
 package com.guilhermepb.todosimple.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.guilhermepb.todosimple.models.enums.ProfileEnum;
 import lombok.*;
+import org.springframework.context.annotation.Profile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -46,5 +51,22 @@ public class User {
     @OneToMany(mappedBy = "user") // One user can have many tasks
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  //not return
     private List<Task> tasks = new ArrayList<Task>(); //tasks list
+
+    @ElementCollection(fetch = FetchType.EAGER)   //When searching for the user, it will also search for the profile
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //to ensure: the user don't receive his profiles
+    @CollectionTable(name = "user_profile")
+    @Column(name = "profile",nullable = false) //don't save a fake profile
+    private Set<Integer> profiles = new HashSet<>(); //List of unique values
+
+    public Set<ProfileEnum> getProfiles() {
+        return this.profiles.stream().map(x -> ProfileEnum.toEnum(x)).collect(Collectors.toSet());
+        //transform the integer in profileEnum
+        //It will transform the profile into a stream, mapping the values, taking the ProfileEnum,
+        // passing the value (x) and transforming it into a .set(), returning the list of profiles
+    }
+
+    public void AddProfile(ProfileEnum profileEnum) { //add a profile for a user and saves
+        this.profiles.add(profileEnum.getCode());
+    }
 
 }
