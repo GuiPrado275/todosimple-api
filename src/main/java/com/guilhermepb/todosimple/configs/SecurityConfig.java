@@ -53,11 +53,12 @@ public class SecurityConfig {//this class if SecurityFilter
         .passwordEncoder(new BCryptPasswordEncoder());
         this.authenticationManager = authenticationManagerBuilder.build();
 
-        http.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated(); //Any access or route is authorized
-        //any request of PUBLIC_MATCHERS and POST, be allowed
-
+                .anyRequest().authenticated().and()
+                .authenticationManager(authenticationManager); //Any access or route is authorized
+                                                               //Any request of PUBLIC_MATCHERS and POST, be allowed
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //the session can't save
 
         return http.build(); //constructor

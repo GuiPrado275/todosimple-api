@@ -13,17 +13,19 @@ import java.util.Objects;
 @Component
 public class JWTUtil {
 
-    @Value("$(jwt.secret)") //of application properties
+    @Value("${jwt.secret}") //of application properties
     private String secret;
 
-    @Value("$(jwt.expiration)") //of application properties
+    @Value("${jwt.expiration}") //of application properties
     private Long expiration;
 
     public String generateToken(String username) { // token that in future will be expired
         SecretKey key = getKeyBySecret();
-        return Jwts.builder().setSubject(username)
+        return Jwts.builder()
+                .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + this.expiration)) //time of expiration
-                        .signWith(key).compact();
+                .signWith(key)
+                .compact();
     }
 
 
