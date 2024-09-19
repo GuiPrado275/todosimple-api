@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guilhermepb.todosimple.exceptions.GlobalExceptionHandler;
 import com.guilhermepb.todosimple.models.User;
 
-import io.jsonwebtoken.io.IOException;
+import java.io.IOException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,19 +45,20 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authentication = this.authenticationManager.authenticate(authToken);
 
             return authentication;
-        } catch (Exception e) { //if validation is failure
-            throw new RuntimeException();
+        } catch (IOException e) { //if validation is failure
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response, FilterChain filterChain, Authentication authentication)
-            throws IOException, ServletException {
+    protected void successfulAuthentication( //if de authentication is successful run this
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+            , Authentication authentication) throws IOException, ServletException {
         UserSpringSecurity userSpringSecurity = (UserSpringSecurity) authentication.getPrincipal();
         String username = userSpringSecurity.getUsername();
         String token = this.jwtUtil.generateToken(username);
         response.addHeader("Authorization", "Bearer " + token);
         response.addHeader("access-control-expose-headers", "Authorization");
+        //this is for return to user the token for be uses the token in the rout
     }
 }

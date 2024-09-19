@@ -1,6 +1,7 @@
 package com.guilhermepb.todosimple.configs;
 
 import com.guilhermepb.todosimple.security.JWTAuthenticationFilter;
+import com.guilhermepb.todosimple.security.JWTAuthorizationFilter;
 import com.guilhermepb.todosimple.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +62,7 @@ public class SecurityConfig {//this class if SecurityFilter
                 .authenticationManager(authenticationManager);  //Any request of PUBLIC_MATCHERS and POST, be allowed
 
         http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil)); //authenticator filter
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //the session can't save
 

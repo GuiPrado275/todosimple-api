@@ -90,7 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
                 request);
     }
 
-    @ExceptionHandler(ObjectNotFoundException.class) //If you search for the user and it does not exist,
+    @ExceptionHandler(ObjectNotFoundException.class) //If you search for the user, and it does not exist,
     @ResponseStatus(HttpStatus.NOT_FOUND)           // this error will be printed
     public ResponseEntity<Object> handleObjectNotFoundException(
             ObjectNotFoundException objectNotFoundException,
@@ -136,8 +136,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
     @Override   //this is for return error, if user writes the wrong email or password this error will be returned
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response
             , AuthenticationException exception) throws IOException, ServletException {
-        Integer status = HttpStatus.FORBIDDEN.value();   //not to repeat code
-        response.setStatus(HttpStatus.FORBIDDEN.value()); //error 402
+            Integer status = HttpStatus.UNAUTHORIZED.value();   //not to repeat code
+        response.setStatus(status); //error 401
         response.setContentType("application/json");
         ErrorResponse errorResponse = new ErrorResponse(status, "Email or password is incorrect"); //message
         response.getWriter().append(errorResponse.toJson());
