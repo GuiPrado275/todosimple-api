@@ -1,5 +1,8 @@
 package com.guilhermepb.todosimple.exceptions;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 import com.guilhermepb.todosimple.services.exceptions.DataBindingViolationException;
@@ -8,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -20,9 +25,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
+
 @Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")  //logger, prints class notes to the console
 @RestControllerAdvice //Notation to tell spring that the class has been initialized with it
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler implements AuthenticationFailureHandler {
 
     @Value("${server.error.include-exception}") //print or not print the error
     private boolean printStackTrace;
@@ -126,4 +133,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(httpStatus).body(errorResponse);
     }
 
+    @Override   //this is for return error, if user writes the wrong email or password this error will be returned
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response
+            , AuthenticationException exception) throws IOException, ServletException {
+        Integer status = HttpStatus.FORBIDDEN.value();   //not to repeat code
+        response.setStatus(HttpStatus.FORBIDDEN.value()); //error 402
+        response.setContentType("application/json");
+        ErrorResponse errorResponse = new ErrorResponse(status, "Email or password is incorrect"); //message
+        response.getWriter().append(errorResponse.toJson());
+    }
 }

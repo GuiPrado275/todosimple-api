@@ -35,4 +35,9 @@ public class ErrorResponse {
         this.errors.add(new ValidationError(field, message));
     }
 
+    public String toJson() {  //the message of error 402 (user write wrong the username or password)
+        return "{\"status\": " + getStatus() + ", " +
+                "\"message\": \"" + getMessage() + "\"}";
+    }
+
 }
