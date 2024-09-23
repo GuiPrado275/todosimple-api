@@ -21,41 +21,37 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UserDetailsService userDetailsService;
 
     //constructor
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager
-            , JWTUtil jwtUtil, UserDetailsService userDetailsService) {
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
+                                  UserDetailsService userDetailsService) {
         super(authenticationManager);
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
-    @Override //super function
+    //super function
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
+
         String authorizationHeader = request.getHeader("Authorization");
         if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);//if Objects is not null and it starts with Bearer
-            UsernamePasswordAuthenticationToken auth = getAuthentication(token);//but Bearer isn't part of token
-            if (Objects.nonNull(auth)) {
+            UsernamePasswordAuthenticationToken auth = getAuthentication(token); //but Bearer isn't part of token
+            if (Objects.nonNull(auth))
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-            filterChain.doFilter(request, response);
         }
-
+        filterChain.doFilter(request, response);
     }
 
-    //for authenticate token, if token is valid:
-    //takes the token data to seek authentication using the token itself, receiving the token checks if it is valid and
-    // extracts the username to search for the user, thus returning what the internal filter needs
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        if(this.jwtUtil.isValidToken(token)) {
+        if (this.jwtUtil.isValidToken(token)) { //for authenticate token, if token is valid:
             String username = this.jwtUtil.getUsername(token);
             UserDetails user = this.userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticatedUser = new UsernamePasswordAuthenticationToken(
-                    user, null, user.getAuthorities());
-            return authenticatedUser;
-        } else {
-            return null;
-        }
+            UsernamePasswordAuthenticationToken authenticatedUser = new UsernamePasswordAuthenticationToken(user, null,
+                    user.getAuthorities());
+            return authenticatedUser; //takes the token data to seek authentication using the token itself,
+        }                  //receiving the token checks if it is valid and extracts the username to search for the user,
+        return null;       //thus returning what the internal filter needs
     }
 
 }

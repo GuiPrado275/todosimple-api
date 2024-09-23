@@ -1,20 +1,17 @@
 package com.guilhermepb.todosimple.security;
 
-
-import com.guilhermepb.todosimple.models.enums.ProfileEnum;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.guilhermepb.todosimple.models.enums.ProfileEnum;
 
-//sup class
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
@@ -29,7 +26,7 @@ public class UserSpringSecurity implements UserDetails {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.authorities = profileEnums.stream().map(x -> new SimpleGrantedAuthority(x.toString()))
+        this.authorities = profileEnums.stream().map(x -> new SimpleGrantedAuthority(x.getDescription()))
                 .collect(Collectors.toList());
         //constructor with filters
     }

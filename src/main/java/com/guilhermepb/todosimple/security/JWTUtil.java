@@ -28,32 +28,28 @@ public class JWTUtil {
                 .compact();
     }
 
-
-    private SecretKey getKeyBySecret() {                            //the key of encrypt
+    private SecretKey getKeyBySecret() { //the key of encrypt
         SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
         return key;
     }
 
-    public boolean isValidToken(String token) {   //to validate that this token is after now
+    public boolean isValidToken(String token) { //to validate that this token is after now
         Claims claims = getClaims(token);
         if (Objects.nonNull(claims)) {
             String username = claims.getSubject();
             Date expirationDate = claims.getExpiration();
             Date now = new Date(System.currentTimeMillis());
-            if (Objects.nonNull(username) && Objects.nonNull(expirationDate) && now.before(expirationDate)) {
+            if (Objects.nonNull(username) && Objects.nonNull(expirationDate) && now.before(expirationDate))
                 return true;
-            }
         }
         return false;
     }
 
     public String getUsername(String token) {
         Claims claims = getClaims(token);
-        if(Objects.nonNull(claims)) {
+        if (Objects.nonNull(claims))
             return claims.getSubject();
-        } else {
-            return null;
-        }
+        return null;
     }
 
     private Claims getClaims(String token) { //For generate claims - transform token in dates, decrypt
