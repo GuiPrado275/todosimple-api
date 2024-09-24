@@ -1,6 +1,7 @@
 package com.guilhermepb.todosimple.controllers;
 
 import com.guilhermepb.todosimple.models.Task;
+import com.guilhermepb.todosimple.models.projection.TaskProjection;
 import com.guilhermepb.todosimple.services.TaskService;
 import com.guilhermepb.todosimple.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,18 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) { //task type response entity
         Task obj = taskService.findById(id);                      //@PathVariable: is a variable in ("/{id}")
         return ResponseEntity.ok(obj);                       // .ok() - If there is no error, continue
                                                             // .body() - Is the "body" of response, local of data
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<TaskProjection>> findAllByUser(){ //search all tasks by userId
+        List<TaskProjection> objs = this.taskService.findAllByUser();     //tasks list to be returned
+        return ResponseEntity.ok().body(objs);
+    } //create an error if the user doesn't exist
 
     @PostMapping
     @Validated                              //validate the Task
@@ -39,12 +43,6 @@ public class TaskController {
                 .path("/{id}").buildAndExpand(obj.getId()).toUri(); //  of the request (task and local host),
         return ResponseEntity.created(uri).build(); //add a path (id and getId()), showing the URI inside .created()
     }
-
-    @GetMapping("/user")
-    public ResponseEntity<List<Task>> findAllByUser(){ //search all tasks by userId
-        List<Task> objs = this.taskService.findAllByUser();     //tasks list to be returned
-        return ResponseEntity.ok().body(objs);
-    } //create an error if the user doesn't exist
 
     @PutMapping("/{id}")
     @Validated

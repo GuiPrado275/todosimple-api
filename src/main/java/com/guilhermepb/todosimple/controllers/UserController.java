@@ -1,8 +1,8 @@
 package com.guilhermepb.todosimple.controllers;
 
-import com.guilhermepb.todosimple.models.User.UpdateUser;
-import com.guilhermepb.todosimple.models.User.CreateUser;
 import com.guilhermepb.todosimple.models.User;
+import com.guilhermepb.todosimple.models.dto.UserCreateDTO;
+import com.guilhermepb.todosimple.models.dto.UserUpdateDTO;
 import com.guilhermepb.todosimple.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +29,19 @@ public class UserController {
     }                                             // .body() - Is the "body" of response, local of data
 
     @PostMapping
-    @Validated(CreateUser.class)              //validate the User ----- models/User
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj){ //@Valid: for validade  @RequestBody - for dates
-        this.userService.create(obj);
+    public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj){//@Valid:forvalidade@RequestBody-for dates
+        User user = this.userService.fromDTO(obj);
+        User newUser = this.userService.create(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest() //It is a constructor, which will take the context
-                .path("/{id}").buildAndExpand(obj.getId()).toUri(); //  of the request (user and local host),
+                .path("/{id}").buildAndExpand(newUser.getId()).toUri(); //  of the request (user and local host),
         return ResponseEntity.created(uri).build(); //add a path (id and getId()), showing the URI inside .created()
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id){
+    public ResponseEntity<Void> update(@Valid @RequestBody UserUpdateDTO obj, @PathVariable Long id){
         obj.setId(id);
-        this.userService.update(obj);  //for update user
+        User user = this.userService.fromDTO(obj);
+        this.userService.update(user);  //for update user
         return ResponseEntity.noContent().build(); //noContend() because we are not returning any data, only updating
     }
 

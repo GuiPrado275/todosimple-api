@@ -1,6 +1,7 @@
 package com.guilhermepb.todosimple.repositories;
 
 import com.guilhermepb.todosimple.models.Task;
+import com.guilhermepb.todosimple.models.projection.TaskProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // form 1 -
-    List<Task> findByUser_Id(Long id); //search id
+    List<TaskProjection> findByUser_Id(Long id); //search id
     //form 1 is very simple
 
     //form 2:

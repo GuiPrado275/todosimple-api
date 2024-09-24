@@ -3,6 +3,7 @@ package com.guilhermepb.todosimple.services;
 import com.guilhermepb.todosimple.models.Task;
 import com.guilhermepb.todosimple.models.User;
 import com.guilhermepb.todosimple.models.enums.ProfileEnum;
+import com.guilhermepb.todosimple.models.projection.TaskProjection;
 import com.guilhermepb.todosimple.repositories.TaskRepository;
 import com.guilhermepb.todosimple.security.UserSpringSecurity;
 import com.guilhermepb.todosimple.services.exceptions.AuthorizationException;
@@ -37,12 +38,12 @@ public class TaskService {
         return task;
     }
 
-    public List<Task> findAllByUser(){      //search all tasks of one user
+    public List<TaskProjection> findAllByUser(){      //search all tasks of one user
         UserSpringSecurity userSpringSecurity = UserService.authenticated(); //for authenticate if user is not logged
-        if (Objects.isNull(userSpringSecurity)) {
+        if (Objects.isNull(userSpringSecurity))
             throw new AuthorizationException("Access denied");
-        }
-        List<Task> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId()); //find the tasks
+
+        List<TaskProjection> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId()); //find the tasks
         return tasks;
     }
 

@@ -2,12 +2,13 @@ package com.guilhermepb.todosimple.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.guilhermepb.todosimple.models.enums.ProfileEnum;
-import lombok.*;
-import org.springframework.context.annotation.Profile;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,42 +21,35 @@ import java.util.stream.Collectors;
 @Table(name = User.TABLE_NAME) //table for database
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class User {
-    public interface CreateUser{}
-    public interface UpdateUser{} //update user is only for password
 
     public static final String TABLE_NAME = "user";
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //id is random (User id)
     @Column(name = "id", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //id is random (User id)
     private Long id;
 
     @Column(name = "username", length = 100, nullable = false, unique = true) // limits for the username
-    @NotNull(groups = CreateUser.class) //the username only can be created and he cant be null or empyt
-    @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 2, max = 100) //limits of length
+    @Size(min = 2, max = 100) //limits of length
+    @NotBlank //the username only can be created and he cant be null or empyt
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //write_only:front side don't have access of password
-    @Column(name = "password", length = 60, nullable = false) //limits
-    @NotNull(groups = {CreateUser.class, UpdateUser.class}) // password can be created and updated
-    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
-    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60) //limits of length
+    @Column(name = "password", length = 60, nullable = false) //limits // password can be created and updated
+    @Size(min = 8, max = 60) //limits of length
+    @NotBlank
     private String password;
 
     @OneToMany(mappedBy = "user") // One user can have many tasks
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  //not return
     private List<Task> tasks = new ArrayList<Task>(); //tasks list
 
-    @ElementCollection(fetch = FetchType.EAGER)   //When searching for the user, it will also search for the profile
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //to ensure: the user don't receive his profiles
-    @CollectionTable(name = "user_profile")
     @Column(name = "profile",nullable = false) //don't save a fake profile
+    @ElementCollection(fetch = FetchType.EAGER)   //When searching for the user, it will also search for the profile
+    @CollectionTable(name = "user_profile")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //to ensure: the user don't receive his profiles
     private Set<Integer> profiles = new HashSet<>(); //List of unique values
 
     public Set<ProfileEnum> getProfiles() {
