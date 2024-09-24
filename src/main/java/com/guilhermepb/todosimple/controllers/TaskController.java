@@ -40,12 +40,11 @@ public class TaskController {
         return ResponseEntity.created(uri).build(); //add a path (id and getId()), showing the URI inside .created()
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){ //search all tasks by userId
-        userService.findById(userId);                                //create an error if the user doesn't exist
-        List<Task> objs = this.taskService.findAllByUserId(userId);     //tasks list to be returned
+    @GetMapping("/user")
+    public ResponseEntity<List<Task>> findAllByUser(){ //search all tasks by userId
+        List<Task> objs = this.taskService.findAllByUser();     //tasks list to be returned
         return ResponseEntity.ok().body(objs);
-    }
+    } //create an error if the user doesn't exist
 
     @PutMapping("/{id}")
     @Validated
