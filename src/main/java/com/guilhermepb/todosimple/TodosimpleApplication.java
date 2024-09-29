@@ -10,8 +10,5 @@ public class TodosimpleApplication {
 		SpringApplication.run(TodosimpleApplication.class, args);
 	}
 }
-<<<<<<< HEAD
 
 
-=======
->>>>>>> ee3222a462367b1d3a456900fbf2cd42c90c4a21
