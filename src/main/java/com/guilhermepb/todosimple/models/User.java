@@ -47,7 +47,7 @@ public class User {
     private List<Task> tasks = new ArrayList<Task>(); //tasks list
 
     @Column(name = "profile",nullable = false) //don't save a fake profile
-    @ElementCollection(fetch = FetchType.EAGER)   //When searching for the user, it will also search for the profile
+    @ElementCollection(fetch = FetchType.EAGER)   //When searching for the use the profile
     @CollectionTable(name = "user_profile")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //to ensure: the user don't receive his profiles
     private Set<Integer> profiles = new HashSet<>(); //List of unique values
@@ -62,5 +62,5 @@ public class User {
     public void AddProfile(ProfileEnum profileEnum) { //add a profile for a user and saves
         this.profiles.add(profileEnum.getCode());
     }
-
 }
+

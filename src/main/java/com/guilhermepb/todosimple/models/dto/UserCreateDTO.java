@@ -20,5 +20,4 @@ public class UserCreateDTO {
     @Size(min = 8, max = 60)
     private String password;
 
-
 }

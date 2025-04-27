@@ -181,6 +181,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
         response.getWriter().append(errorResponse.toJson());
     }
 
-
-
 }

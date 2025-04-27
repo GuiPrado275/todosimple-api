@@ -60,5 +60,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader("access-control-expose-headers", "Authorization");
     }    //this is for return to user the token for be uses the token in the rout
 
-
 }
